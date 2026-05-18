@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Mythical Studios Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            panel: '#111827',
+            surface: '#0b1220'
+          },
+          boxShadow: {
+            glowCyan: '0 0 0 1px rgba(34,211,238,0.4), 0 0 24px rgba(34,211,238,0.25)',
+            glowRed: '0 0 0 1px rgba(248,113,113,0.35), 0 0 18px rgba(248,113,113,0.2)',
+            glowPurple: '0 0 0 1px rgba(192,132,252,0.35), 0 0 18px rgba(192,132,252,0.2)'
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="min-h-screen bg-slate-950 text-slate-100 antialiased">
+  <div class="fixed inset-0 pointer-events-none opacity-80" aria-hidden="true">
+    <div class="absolute inset-0" style="background-image: linear-gradient(rgba(148,163,184,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(148,163,184,0.08) 1px, transparent 1px); background-size: 28px 28px;"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-slate-900/70 via-slate-950/80 to-slate-950"></div>
+  </div>
+
+  <main class="relative z-10 min-h-screen max-w-md mx-auto px-4 pb-8">
+    <section id="homeView" class="pt-9 space-y-6">
+      <header>
+        <p class="text-xs tracking-[0.28em] uppercase text-cyan-300/90">Mythical Studios</p>
+        <h1 class="mt-2 text-3xl font-bold leading-tight">Community Gateway Hub</h1>
+        <p class="mt-2 text-slate-300 text-sm leading-relaxed">Select a path to continue. Every flow includes a quick 5-step review form.</p>
+      </header>
+
+      <div class="space-y-4">
+        <button data-form="unban" class="w-full rounded-2xl bg-slate-900 border border-red-400/45 p-5 text-left active:scale-[0.99] transition-transform shadow-glowRed">
+          <p class="text-red-300 text-sm font-semibold">Player Unban Appeal</p>
+          <p class="text-slate-300 text-xs mt-1">Request account review and explain your case.</p>
+        </button>
+
+        <button data-form="media" class="w-full rounded-2xl bg-slate-900 border border-purple-400/45 p-5 text-left active:scale-[0.99] transition-transform shadow-glowPurple">
+          <p class="text-purple-300 text-sm font-semibold">Media Editor Application</p>
+          <p class="text-slate-300 text-xs mt-1">Apply for the visual content and editing team.</p>
+        </button>
+
+        <button data-form="creator" class="w-full rounded-2xl bg-slate-900 border border-cyan-400/50 p-5 text-left active:scale-[0.99] transition-transform shadow-glowCyan">
+          <p class="text-cyan-300 text-sm font-semibold">Creator Rank Onboarding</p>
+          <p class="text-slate-300 text-xs mt-1">Complete your onboarding to unlock creator tools.</p>
+        </button>
+      </div>
+    </section>
+
+    <section id="formView" class="hidden pt-4">
+      <header class="sticky top-0 z-20 bg-slate-950/95 py-3 border-b border-slate-800">
+        <div class="flex items-center gap-3">
+          <button id="backHome" class="h-11 w-11 rounded-xl border border-slate-700 bg-slate-900 text-slate-200 text-xl leading-none" aria-label="Back to home">←</button>
+          <div class="min-w-0">
+            <p id="formTitle" class="text-sm font-semibold truncate">Form</p>
+            <p class="text-xs text-slate-400">5-step submission flow</p>
+          </div>
+        </div>
+        <div class="mt-3 h-2 w-full rounded-full bg-slate-800 overflow-hidden">
+          <div id="progressBar" class="h-full w-0 rounded-full bg-cyan-400 transition-all duration-300"></div>
+        </div>
+      </header>
+
+      <article class="mt-6 rounded-2xl bg-slate-900 border border-slate-800 p-4">
+        <p id="questionStep" class="text-xs uppercase tracking-[0.2em] text-slate-400"></p>
+        <h2 id="questionLabel" class="mt-2 text-lg font-semibold"></h2>
+        <p id="questionHint" class="mt-1 text-sm text-slate-300"></p>
+
+        <div class="mt-4">
+          <input id="textInput" type="text" class="hidden w-full rounded-xl border border-slate-700 bg-slate-800 text-slate-100 p-4 text-base outline-none focus:border-cyan-500" />
+          <textarea id="textareaInput" rows="5" class="hidden w-full rounded-xl border border-slate-700 bg-slate-800 text-slate-100 p-4 text-base outline-none focus:border-cyan-500 resize-none"></textarea>
+        </div>
+
+        <button id="nextBtn" class="mt-5 w-full rounded-xl bg-cyan-500 text-slate-950 font-semibold p-4">Next Question</button>
+      </article>
+    </section>
+
+    <section id="successView" class="hidden pt-16">
+      <div class="rounded-3xl border border-cyan-400/50 bg-slate-900 p-6 text-center shadow-glowCyan">
+        <p class="text-xs uppercase tracking-[0.24em] text-cyan-300">Submission Complete</p>
+        <h2 class="mt-3 text-2xl font-bold">You're all set.</h2>
+        <p class="mt-2 text-sm text-slate-300">Continue to our Discord gateway for the next stage.</p>
+        <a href="http://discord.mythicalstudios.online" class="mt-6 inline-flex w-full items-center justify-center rounded-2xl bg-cyan-400 text-slate-950 font-bold text-lg p-4 shadow-glowCyan active:scale-[0.99] transition-transform">Open Discord Gateway</a>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const formConfigs = {
+      unban: {
+        title: 'Player Unban Appeal',
+        accent: 'bg-red-400',
+        button: 'bg-red-400 text-slate-950',
+        questions: [
+          { label: 'What is your in-game username?', hint: 'Enter the exact username tied to the ban.', type: 'text' },
+          { label: 'What ban reason were you given?', hint: 'Use the reason shown in your punishment message.', type: 'text' },
+          { label: 'When did the ban occur?', hint: 'Provide date/time and timezone if possible.', type: 'text' },
+          { label: 'Explain what happened from your perspective.', hint: 'Be honest and specific.', type: 'textarea' },
+          { label: 'Why should the team grant your appeal?', hint: 'Share accountability and future intent.', type: 'textarea' }
+        ]
+      },
+      media: {
+        title: 'Media Editor Application',
+        accent: 'bg-purple-400',
+        button: 'bg-purple-400 text-slate-950',
+        questions: [
+          { label: 'What name should we use for your application?', hint: 'Creator handle or real name.', type: 'text' },
+          { label: 'How many months of editing experience do you have?', hint: 'Approximate is fine.', type: 'text' },
+          { label: 'Which tools do you use most?', hint: 'Example: Premiere Pro, DaVinci, CapCut.', type: 'text' },
+          { label: 'Describe your editing style and strengths.', hint: 'Mention pacing, storytelling, or motion work.', type: 'textarea' },
+          { label: 'Share links to your best portfolio pieces.', hint: 'Paste direct URLs.', type: 'textarea' }
+        ]
+      },
+      creator: {
+        title: 'Creator Rank Onboarding',
+        accent: 'bg-cyan-400',
+        button: 'bg-cyan-400 text-slate-950',
+        questions: [
+          { label: 'What is your content creator name?', hint: 'Must match your public profile branding.', type: 'text' },
+          { label: 'Primary platform and follower count?', hint: 'YouTube, TikTok, Twitch, etc.', type: 'text' },
+          { label: 'What type of content do you publish?', hint: 'Gameplay, tutorials, clips, shorts, etc.', type: 'text' },
+          { label: 'How will you represent Mythical Studios?', hint: 'Explain your collaboration goals.', type: 'textarea' },
+          { label: 'Any additional notes for onboarding staff?', hint: 'Share scheduling, timezone, or campaign ideas.', type: 'textarea' }
+        ]
+      }
+    };
+
+    const homeView = document.getElementById('homeView');
+    const formView = document.getElementById('formView');
+    const successView = document.getElementById('successView');
+    const formTitle = document.getElementById('formTitle');
+    const questionStep = document.getElementById('questionStep');
+    const questionLabel = document.getElementById('questionLabel');
+    const questionHint = document.getElementById('questionHint');
+    const textInput = document.getElementById('textInput');
+    const textareaInput = document.getElementById('textareaInput');
+    const nextBtn = document.getElementById('nextBtn');
+    const progressBar = document.getElementById('progressBar');
+
+    let activeFormKey = null;
+    let activeIndex = 0;
+    let responses = [];
+
+    const resetState = () => {
+      activeFormKey = null;
+      activeIndex = 0;
+      responses = [];
+      textInput.value = '';
+      textareaInput.value = '';
+      nextBtn.textContent = 'Next Question';
+      nextBtn.className = 'mt-5 w-full rounded-xl bg-cyan-500 text-slate-950 font-semibold p-4';
+      progressBar.className = 'h-full w-0 rounded-full bg-cyan-400 transition-all duration-300';
+      progressBar.style.width = '0%';
+    };
+
+    const showHome = () => {
+      resetState();
+      formView.classList.add('hidden');
+      successView.classList.add('hidden');
+      homeView.classList.remove('hidden');
+    };
+
+    const renderQuestion = () => {
+      const config = formConfigs[activeFormKey];
+      const question = config.questions[activeIndex];
+      const step = activeIndex + 1;
+      const percent = (step / config.questions.length) * 100;
+
+      formTitle.textContent = config.title;
+      questionStep.textContent = `Step ${step} of ${config.questions.length}`;
+      questionLabel.textContent = question.label;
+      questionHint.textContent = question.hint;
+      progressBar.style.width = `${percent}%`;
+      progressBar.className = `h-full rounded-full transition-all duration-300 ${config.accent}`;
+      nextBtn.className = `mt-5 w-full rounded-xl ${config.button} font-semibold p-4`;
+      nextBtn.textContent = step === config.questions.length ? 'Submit Form' : 'Next Question';
+
+      textInput.classList.add('hidden');
+      textareaInput.classList.add('hidden');
+
+      const inputEl = question.type === 'textarea' ? textareaInput : textInput;
+      inputEl.classList.remove('hidden');
+      inputEl.value = responses[activeIndex] || '';
+      inputEl.focus();
+    };
+
+    const startForm = (formKey) => {
+      resetState();
+      activeFormKey = formKey;
+      homeView.classList.add('hidden');
+      successView.classList.add('hidden');
+      formView.classList.remove('hidden');
+      renderQuestion();
+    };
+
+    document.querySelectorAll('[data-form]').forEach(btn => {
+      btn.addEventListener('click', () => startForm(btn.dataset.form));
+    });
+
+    document.getElementById('backHome').addEventListener('click', showHome);
+
+    nextBtn.addEventListener('click', () => {
+      if (!activeFormKey) return;
+      const config = formConfigs[activeFormKey];
+      const question = config.questions[activeIndex];
+      const inputEl = question.type === 'textarea' ? textareaInput : textInput;
+      const value = inputEl.value.trim();
+
+      if (!value) {
+        inputEl.focus();
+        inputEl.classList.add('border-rose-400');
+        setTimeout(() => inputEl.classList.remove('border-rose-400'), 550);
+        return;
+      }
+
+      responses[activeIndex] = value;
+      if (activeIndex < config.questions.length - 1) {
+        activeIndex += 1;
+        renderQuestion();
+      } else {
+        formView.classList.add('hidden');
+        successView.classList.remove('hidden');
+      }
+    });
+  </script>
+</body>
+</html>
